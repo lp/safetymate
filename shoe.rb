@@ -53,7 +53,7 @@ class Shoe < Shoes
       @netDest = stack do
         flow do
           colorContent('Network backup path: ', red)
-          colorContent("//#{@loader.server}/#{@loader.share}", white)
+          colorContent("//#{@loader.host}/#{@loader.share}", white)
         end
         @setNetDir = button('Set Network Path', :margin => 15) { clear; netpath }
         flow do
@@ -83,8 +83,8 @@ class Shoe < Shoes
   def netpath
     layout do
       flow do
-        colorContent('server name or IP adress:', red)
-        @server = edit_line(@loader.server, :margin => 15)
+        colorContent('host name or IP adress:', red)
+        @host = edit_line(@loader.host, :margin => 15)
       end
       flow do
         colorContent('share name or IP adress:', red)
@@ -92,11 +92,11 @@ class Shoe < Shoes
       end
       flow do
         button('cancel', :margin => 15) { clear; options }
-        button('Done', :margin => 15) {@loader.server = @server.text; @loader.share = @share.text; clear; options}
+        button('Done', :margin => 15) {@loader.host = @host.text; @loader.share = @share.text; clear; options}
       end
     end
     @title.replace 'Backup Server'
-    @display.replace 'Please write the server path for backup'
+    @display.replace 'Please write the host path for backup'
   end
   
   def netlogin
@@ -115,7 +115,7 @@ class Shoe < Shoes
       end
     end
     @title.replace 'Login'
-    @display.replace 'Please enter User and password for server login'
+    @display.replace 'Please enter User and password for host login'
   end
   
   def confirm
@@ -124,7 +124,7 @@ class Shoe < Shoes
       colorContent("#{@loader.source}", white)
       colorContent('Destination: ', red)
       colorContent("#{@loader.destination}", white) if @loader.type == 'local'
-      colorContent("//#{@loader.server}/#{@loader.share}", white) if @loader.type == 'network'
+      colorContent("//#{@loader.host}/#{@loader.share}", white) if @loader.type == 'network'
       flow do
         button("backup!", :margin => 15) { clear; execution}
         button("Change options", :margin => 15) { clear; options}
@@ -139,9 +139,9 @@ class Shoe < Shoes
       @progress = progress :width => 300
     end
     @title.replace 'Backuping:'
-    @sock = Socks.new(self, {:progress => @progress, :display => @display})
+    @sock = Socks.new(self, @loader, {:progress => @progress, :display => @display})
     @display.replace "scanning your backup forder"
-    @sock.lace(@loader.source,@loader.destination)
+    @sock.lace
     @sock.timeFreeze(@loader.extension)
     @sock.walk
     @sock.saveData

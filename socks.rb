@@ -11,17 +11,23 @@ class Socks
   require 'hashfs'
   require 'ftools'
   
-  def initialize(shoes, controls)
+  def initialize(shoes, loader, controls)
     @shoes = shoes
+    @loader = loader
     @controls = controls
   end
 
-  def lace(srcRoot,destRoot)
-    @srcfs = Hashfs.new(srcRoot)
+  def lace
+    @srcfs = Hashfs.new(@loader.source)
     @srcfs.scan
     @controls[:display].replace "looking for files to backup"
-    makedirs(destRoot) unless File.exist?(destRoot)
-    @destfs = Hashfs.load(destRoot) 
+    if @loader.type == 'local'
+      makedirs(@loader.destination) unless File.exist?(@loader.destination)
+      @destfs = Hashfs.load(@loader.destination)
+    else
+      @smb = SmbHelper.new(:host => @loader.host, :share => @loader.share, :user => @loader.user, :password => @loader.password)
+      
+    end
     @trail = Hashfs.compare(@srcfs, @destfs)
   end
   
