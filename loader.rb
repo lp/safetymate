@@ -11,7 +11,7 @@ class Loader
   require 'ftools'
   require 'yaml'
   attr_reader :source
-  attr_writer :destination, :server, :share, :user, :password, :type, :extension
+  attr_writer :destination, :host, :share, :user, :password, :type, :extension
   
   @@tmpfile = '/tmp/safety.now'
   @@prefName = 'safetyCopy_prefs.yml'
@@ -36,7 +36,7 @@ class Loader
       @extension = pref[:extension] if pref.has_key?(:extension)
       @user = pref[:user] if pref.has_key?(:user)
       @password = pref[:password] if pref.has_key?(:password)
-      @server = pref[:server] if pref.has_key?(:server)
+      @host = pref[:host] if pref.has_key?(:host)
       @share = pref[:share] if pref.has_key?(:share)
       @type = pref[:type] if pref.has_key?(:type)
     end
@@ -46,8 +46,8 @@ class Loader
     @destination || '/choose/a/path/'
   end
   
-  def server
-    @server || 'servername'
+  def host
+    @host || 'hostname'
   end
   
   def share
@@ -75,7 +75,7 @@ class Loader
       :type => @type,
       :extension => @extension,
       :destination => @destination,
-      :server => @server,
+      :host => @host,
       :share => @share,
       :user => @user,
       :password => @password
@@ -111,7 +111,7 @@ class Loader
   
   def cleanType(pref)
     if @type == 'local'
-      list = [:server,:share,:user,:password]
+      list = [:host,:share,:user,:password]
     else
       list = [:destination]
     end
