@@ -297,4 +297,12 @@ class SafeHistory
   
 end
 
+class SmbHelper
+  
+  def initialize(options={:host => '', :share => '', :domain => '', :user => '', :password => ''})
+    @sam = Sambala.new(options)
+  end
+  
+end
+
 
