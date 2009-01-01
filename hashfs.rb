@@ -298,9 +298,24 @@ class SafeHistory
 end
 
 class SmbHelper
+  require 'rubygems'
+  require 'sambala'
   
   def initialize(options={:host => '', :share => '', :domain => '', :user => '', :password => ''})
     @sam = Sambala.new(options)
+  end
+  
+  def get_destfs(source)
+    basename = File.basename(source)
+    tmp_destfs = '/tmp/destfs'
+    dirs = @sam.ls(:mask => basename)
+    unless dirs =~ /.*#{basename}.*/
+       @sam.mkdir(:path => basename)
+       return Hashfs.new(root)
+    else
+      @sam.get(:from => DATANAME, :to => tmp_destfs)
+      return Marshal.load(File.open(tmp_destfs))
+    end
   end
   
 end

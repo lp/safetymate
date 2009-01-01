@@ -26,7 +26,7 @@ class Socks
       @destfs = Hashfs.load(@loader.destination)
     else
       @smb = SmbHelper.new(:host => @loader.host, :share => @loader.share, :user => @loader.user, :password => @loader.password)
-      
+      @destfs = @smb.get_destfs(@loader.source)
     end
     @trail = Hashfs.compare(@srcfs, @destfs)
   end
