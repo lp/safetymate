@@ -12,6 +12,13 @@
 class Shoe < Shoes
   require 'loader'
   require 'socks'
+  require 'shoe_load'
+  require 'shoe_options'
+  require 'shoe_netpath'
+  require 'shoe_netlogin'
+  require 'shoe_confirm'
+  require 'shoe_execution'
+  include ShoeHelpers
   
   url '/', :load
   url '/options', :options
@@ -19,134 +26,6 @@ class Shoe < Shoes
   url '/netlogin', :netlogin
   url '/confirm', :confirm
   url '/execution', :execution
-  
-  def load
-    layout
-    @title.replace 'Loading'
-    @display.replace 'Please wait while I load your settings'
-    @loader = Loader.new
-    @loader.destination && ( clear && confirm) || (!alert("You dont have a destination Folder!\nPlease define one in the option page.") && (clear && options)) 
-  end
-  
-  def options
-    layout do
-      flow do
-        colorContent('Project File Extension: ', red)
-        @ext = list_box :items => [".ptf", ".npr", "none"],
-          :margin => 15,
-          :width => 120,
-          :choose => @loader.extension do |list|
-            @loader.extension = list.text
-          end
-      end
-      flow do
-        colorContent('Backup Type: ', red)
-        @type = list_box :items => ["local", "network"],
-          :margin => 15,
-          :width => 120,
-          :choose => @loader.type do |list|
-            @loader.type = list.text
-            toggleDest
-          end
-      end
-      
-      @netDest = stack do
-        flow do
-          colorContent('Network backup path: ', red)
-          colorContent("//#{@loader.host}/#{@loader.share}", white)
-        end
-        @setNetDir = button('Set Network Path', :margin => 15) { clear; netpath }
-        flow do
-          colorContent("user: ", red)
-          colorContent("#{@loader.user}", white)
-        end
-        flow do
-          colorContent("pass: ", red)
-          colorContent("#{@loader.password}", white)
-        end
-        @setAccess = button('Set User and Password', :margin => 15) { clear; netlogin }
-      end
-      
-      @localDest = stack do
-        colorContent("Local backup destination path: ", red)
-        @destination = colorContent("#{@loader.destination}", white)
-        button('set destination folder', :margin => 15) {@loader.destination = ask_open_folder; @destination.replace "\t#{@loader.destination}" }
-      end
-      
-      toggleDest
-      button('OK', :align => 'right', :margin => 15) { @loader.write; clear; confirm}
-    end
-    @title.replace 'Options'
-    @display.replace 'Please set properly:'
-  end
-  
-  def netpath
-    layout do
-      flow do
-        colorContent('host name or IP adress:', red)
-        @host = edit_line(@loader.host, :margin => 15)
-      end
-      flow do
-        colorContent('share name or IP adress:', red)
-        @share = edit_line(@loader.share, :margin => 15)
-      end
-      flow do
-        button('cancel', :margin => 15) { clear; options }
-        button('Done', :margin => 15) {@loader.host = @host.text; @loader.share = @share.text; clear; options}
-      end
-    end
-    @title.replace 'Backup Server'
-    @display.replace 'Please write the host path for backup'
-  end
-  
-  def netlogin
-    layout do
-      flow do
-        colorContent('user: ', red)
-        @user = edit_line(@loader.user, :margin => 15)
-      end
-      flow do
-        colorContent('password: ', red)
-        @pass = edit_line(@loader.password, :margin => 15)
-      end
-      flow do
-        button('cancel', :margin => 15) { clear; options }
-        button('Done', :margin => 15) {@loader.user = @user.text; @loader.password = @pass.text; clear; options}
-      end
-    end
-    @title.replace 'Login'
-    @display.replace 'Please enter User and password for host login'
-  end
-  
-  def confirm
-    layout do
-      colorContent('Source: ', red)
-      colorContent("#{@loader.source}", white)
-      colorContent('Destination: ', red)
-      colorContent("#{@loader.destination}", white) if @loader.type == 'local'
-      colorContent("//#{@loader.host}/#{@loader.share}", white) if @loader.type == 'network'
-      flow do
-        button("backup!", :margin => 15) { clear; execution}
-        button("Change options", :margin => 15) { clear; options}
-      end
-    end
-    @title.replace 'Settings'
-    @display.replace 'Please check your settings and press BACKUP!'
-  end
-  
-  def execution
-    layout do
-      @progress = progress :width => 300
-    end
-    @title.replace 'Backuping:'
-    @sock = Socks.new(self, @loader, {:progress => @progress, :display => @display})
-    @display.replace "scanning your backup forder"
-    @sock.lace
-    @sock.timeFreeze(@loader.extension)
-    @sock.walk
-    @sock.saveData
-    @sock.printDebug('IOOOI')
-  end
   
   private
   
