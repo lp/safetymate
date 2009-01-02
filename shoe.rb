@@ -11,7 +11,6 @@
 
 class Shoe < Shoes
   require 'loader'
-  require 'socks'
   require 'shoe_load'
   require 'shoe_options'
   require 'shoe_netpath'
