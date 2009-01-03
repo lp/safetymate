@@ -37,13 +37,15 @@ class Shoe < Shoes
         :stroke => pink
       )
     end
-    stack do
-      @display = para( '',
-        :size => 14, 
-        :align => "center", 
-        :font => "Trebuchet MS", 
-        :stroke => pink
-      )
+    stack(:margin => 20) do
+      stack(:height => 100) do
+        @display = para( '',
+          :size => 14, 
+          :align => "center", 
+          :font => "Trebuchet MS", 
+          :stroke => pink
+        )
+      end
       yield if block_given?
     end
   end
@@ -57,19 +59,6 @@ class Shoe < Shoes
       :stroke => color
     )
   end
-  
-  
-  def toggleDest
-    if @loader.type == 'network'
-      @localDest.hide
-      @netDest.show 
-    else
-      @localDest.show
-      @netDest.hide
-    end
-  end
-  
-  
   
 end
 
