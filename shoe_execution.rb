@@ -4,7 +4,7 @@ module ShoeHelpers
   
   def execution
     layout do
-      @progress = progress :width => 300
+      @progress = progress :width => 460
     end
     @title.replace 'Backuping:'
     @display.replace "scanning your backup forder"
@@ -31,8 +31,8 @@ module ShoeHelpers
     unless @loader.extension == 'none'
       h = SafeHistory.new(@loader.extension,@srcfs.root,@srcfs.fs)
       h.go
+      Hashfs.historyToSafety(h,@trail)
     end
-    Hashfs.historyToSafety(h,@trail)
   end
   
   def walk
