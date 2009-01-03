@@ -52,4 +52,15 @@ module ShoeHelpers
     @display.replace 'Please set properly:'
   end
   
+  private
+  
+  def toggleDest
+    if @loader.type == 'network'
+      @localDest.hide
+      @netDest.show 
+    else
+      @localDest.show
+      @netDest.hide
+    end
+  end
 end
