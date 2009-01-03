@@ -11,7 +11,7 @@ class Loader
   require 'ftools'
   require 'yaml'
   attr_reader :source
-  attr_writer :destination, :host, :share, :user, :password, :type, :extension
+  attr_accessor :destination, :host, :share, :user, :password, :type, :extension
   
   @@tmpfile = '/tmp/safety.now'
   @@prefName = 'safetyCopy_prefs.yml'
@@ -32,42 +32,14 @@ class Loader
     else
       pref = Marshal.load(File.open(@@tmpfile).read)
       @source = pref[:source] if pref.has_key?(:source)
-      @destination = pref[:destination] if pref.has_key?(:destination)
-      @extension = pref[:extension] if pref.has_key?(:extension)
-      @user = pref[:user] if pref.has_key?(:user)
-      @password = pref[:password] if pref.has_key?(:password)
-      @host = pref[:host] if pref.has_key?(:host)
-      @share = pref[:share] if pref.has_key?(:share)
-      @type = pref[:type] if pref.has_key?(:type)
+      pref.has_key?(:destination) ? @destination = pref[:destination] : @destination = '!!! /choose/a/path/ !!!'
+      pref.has_key?(:extension) ? @extension = pref[:extension] : @extension = 'none'
+      pref.has_key?(:user) ? @user = pref[:user] : @user = `whoami`.chomp
+      pref.has_key?(:password) ? @password = pref[:password] : @password = ''
+      pref.has_key?(:host) ? @host = pref[:host] : @host = 'hostname'
+      pref.has_key?(:share) ? @share = pref[:share] : @share = 'sharename'
+      pref[:type].nil? ? @type = 'local' : @type = pref[:type]
     end
-  end
-  
-  def destination
-    @destination || '/choose/a/path/'
-  end
-  
-  def host
-    @host || 'hostname'
-  end
-  
-  def share
-    @share || 'sharename'
-  end
-  
-  def type
-    @type || 'local'
-  end
-  
-  def user
-    @user || `whoami`.chomp
-  end
-  
-  def password
-    @password || ''
-  end
-    
-  def extension
-    @extension || 'none'
   end
   
   def write
@@ -98,17 +70,7 @@ class Loader
     set = [@@prefText, cleanType(pref)]
     f = File.open(prefPath, 'w'); f.puts YAML::dump(set); f.close
   end
-  
-  # def writePref(key, value)
-  #   if File.exist?(prefPath)
-  #     set = YAML::load(File.open(prefPath, 'r').read)
-  #   else
-  #     set = [@@prefText, Hash.new]
-  #   end
-  #   set[1][key] = value
-  #   f = File.open(prefPath, 'w'); f.puts YAML::dump(set); f.close
-  # end
-  
+    
   def cleanType(pref)
     if @type == 'local'
       list = [:host,:share,:user,:password]
