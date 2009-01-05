@@ -14,33 +14,25 @@ module ShoeHelpers
   private
   
   def lace
-    @srcfs = Hashfs.new(@loader.source)
+    @srcfs = Hashfs.new(@loader)
     @srcfs.scan
     @display.replace "looking for files to backup"
-    if @loader.type == 'local'
-      makedirs(@loader.destination) unless File.exist?(@loader.destination)
-      @destfs = Hashfs.load(@loader.destination)
-    else
-      @smb = SmbHelper.new(:host => @loader.host, :share => @loader.share, :user => @loader.user, :password => @loader.password)
-      @destfs = @smb.get_destfs(@loader.source)
-    end
-    @trail = Hashfs.compare(@srcfs, @destfs)
+    @destfs = Hashfs.load
+    Hashfs.diff(@srcfs, @destfs)
   end
   
   def timeFreeze
     unless @loader.extension == 'none'
-      h = SafeHistory.new(@loader.extension,@srcfs.root,@srcfs.fs)
-      h.go
-      Hashfs.historyToSafety(h,@trail)
+      Hashfs.historyToSafety
     end
   end
   
   def walk
     anim = animate do |i|
-      @progress.fraction = @trail.progress
-      @display.replace "backuping file: #{@trail.current_file} progress= #{@trail.progress}"
-      @trail.step
-      anim.stop if @trail.complete
+      @progress.fraction = @diff.progress
+      @display.replace "backuping file: #{@diff.current_file} progress= #{@diff.progress}"
+      @diff.step
+      anim.stop if @diff.complete
     end
   end
   
