@@ -8,6 +8,10 @@
 # Copyright:: Spiralix 2008 under same License as Ruby
 # 
 # :title:Safety v1.0
+Shoes.setup do
+  gem 'abundance'
+  gem 'sambala'
+end
 
 class Shoe < Shoes
   require 'loader'
