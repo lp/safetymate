@@ -38,7 +38,7 @@ module ShoeHelpers
   
   def saveData
     @destfs.merge(@srcfs)
-    @destfs.dump
+    Hashfs.dump(@destfs)
   end
   
   def printDebug(text)

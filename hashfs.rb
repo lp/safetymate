@@ -19,15 +19,14 @@ class Hashfs
   require 'hashfs_samba'
   require 'hashfs_utils'
   
-  attr_reader :dataPath, :progress, :bit, :fs, :root
+  attr_reader :progress, :bit, :fs, :root
   
-  DATANAME = '/.session_safety_data'
+  DATANAME = '.session_safety_data'
   
   @@debug = File.new('debug_out.txt', 'w')
   
   def initialize(loader)
     @loader = loader
-    @dataPath = @loader.source + DATANAME
     @fs = Hash.new
   end
   
@@ -41,16 +40,15 @@ class Hashfs
     @fs = Cleanfs.killdupl(@loader.source,@fs,srcfs.fs)
   end
   
-  # dumping the hashfs 
-  def dump
-    File.new(@dataPath, 'w').puts( Marshal.dump(self) )
-  end
-  
   # Class Methods
   
-  # dumping hashfs object implemented as Class Method, takes object as parameter + dataPath
-  def Hashfs.dump(hashfs, root)
-    File.new(root + DATANAME, 'w').puts( Marshal.dump(hashfs) )
+  # dumping destfs object implemented as Class Method, takes object as parameter + dataPath
+  def Hashfs.dump(destfs)
+    if @loader.type == 'local'
+      Local.dump(destfs,@loader.destination)
+    else
+      Samba.dump(destfs)
+    end
   end
   
   # method for loading previously scanned hashfs from a given +dataPath+ parameter

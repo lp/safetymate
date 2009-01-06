@@ -20,7 +20,7 @@ class Hashfs
     
     def Local.load(root)
       makedirs(root) unless File.exist?(root)
-      path = root + DATANAME
+      path = File.catname(DATANAME,root)
       if File.exist?(path)
         return Marshal.load(File.open(path))
       else
@@ -35,6 +35,10 @@ class Hashfs
       dir = File.dirname(destDir)
       File.makedirs( dir ) unless File.exist?( dir )
       File.copy(srcDir,destDir)
+    end
+    
+    def Local.dump(destfs,root)
+      File.new(File.catname(DATANAME,root), 'w').puts( Marshal.dump(destfs) )
     end
     
   end
