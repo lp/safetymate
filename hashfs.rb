@@ -26,26 +26,26 @@ class Hashfs
   @@debug = File.new('debug_out.txt', 'w')
   
   def initialize(loader)
-    @loader = loader
+    @@loader = loader
     @fs = Hash.new
   end
   
   def scan
-    @fs = Local.scan_fs(@loader.source)
+    @fs = Local.scan_fs(@@loader.source)
   end
   
   # merging two fs, called from destination to keep info from destination
   def merge(srcfs)
     @fs.merge!( srcfs.fs )
-    @fs = Cleanfs.killdupl(@loader.source,@fs,srcfs.fs)
+    @fs = Cleanfs.killdupl(@@loader.source,@fs,srcfs.fs)
   end
   
   # Class Methods
   
   # dumping destfs object implemented as Class Method, takes object as parameter + dataPath
   def Hashfs.dump(destfs)
-    if @loader.type == 'local'
-      Local.dump(destfs,@loader.destination)
+    if @@loader.type == 'local'
+      Local.dump(destfs,@@loader.destination)
     else
       Samba.dump(destfs)
     end
@@ -54,10 +54,10 @@ class Hashfs
   # method for loading previously scanned hashfs from a given +dataPath+ parameter
   
   def Hashfs.load
-    if @loader.type == 'local'
-      Local.load(@loader.destination)
+    if @@loader.type == 'local'
+      Local.load(@@loader.destination)
     else
-      Samba.load(@loader)
+      Samba.load(@@loader)
     end
   end
   
@@ -73,7 +73,7 @@ class Hashfs
   end
   
   def Hashfs.historyToSafety
-    history = History.new(@loader.extension,@srcfs.root,@srcfs.fs)
+    history = History.new(@@loader.extension,@srcfs.root,@srcfs.fs)
     history.go
     history.exts.each do |k,v|
       newPath = File.catname(File.basename(k),history.historyPath)
@@ -85,8 +85,8 @@ class Hashfs
     if @@diff.map?
       map = @@diff.current_map
       map[:paths].each do |srcDir,destRel|
-        if @loader.type == 'local'
-          Local.backup(srcDir,@loader.destination,destRel)
+        if @@loader.type == 'local'
+          Local.backup(srcDir,@@loader.destination,destRel)
         else
           Samba.backup(srcDir,destRel)
         end
@@ -95,6 +95,18 @@ class Hashfs
     else
       @@diff.completed
     end
+  end
+  
+  def Hashfs.progress
+    @@diff.progress
+  end
+  
+  def Hashfs.current_file
+    @@diff.current_file
+  end
+  
+  def Hashfs.completed?
+    @@diff.complete
   end
   
   def Hashfs.printDebug(text)
