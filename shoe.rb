@@ -12,7 +12,6 @@ Shoes.setup do
   gem 'abundance'
   gem 'sambala'
 end
-
 class Shoe < Shoes
   require 'loader'
   require 'shoe_load'
