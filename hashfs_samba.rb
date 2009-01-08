@@ -3,7 +3,8 @@ class Hashfs
     require 'rubygems'
     require 'sambala'
     
-    def Samba.load
+    def Samba.load(loader)
+      @@loader = loader
       @@samba_basedir = File.basename(@@loader.source)
       @@samba_datafile = File.catname(DATANAME,@@samba_basedir)
       @@tmp_destfs = File.catname(DATANAME,'/tmp')
@@ -11,7 +12,8 @@ class Hashfs
                             :share => @@loader.share,
                             :domain => '',
                             :user => @@loader.user,
-                            :password => @@loader.password)
+                            :password => @@loader.password,
+                            :threads => 1)
       Samba.getDestFs
     end
     
