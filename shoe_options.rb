@@ -27,6 +27,10 @@ module ShoeHelpers
           colorContent('Network backup path: ', red)
           colorContent("//#{@loader.host}/#{@loader.share}", white)
         end
+				flow do
+					colorContent('Domain', red)
+					colorContent("#{@loader.domain.upcase}", white)
+				end
         @setNetDir = button('Set Network Path', :margin => 15) { clear; netpath }
         flow do
           colorContent("user: ", red)
