@@ -10,7 +10,7 @@ class Hashfs
       @@tmp_destfs = File.catname(DATANAME,'/tmp')
       @@server = Sambala.new(:host => @@loader.host,
                             :share => @@loader.share,
-                            :domain => '',
+                            :domain => @@loader.domain,
                             :user => @@loader.user,
                             :password => @@loader.password,
                             :threads => 1)
@@ -31,7 +31,8 @@ class Hashfs
 			destPath = File.catname(destRel,@@samba_basedir)
 			destDir = File.dirname(destPath)
       @@server.mkdir(:path => destDir)
-      @@server.put(:from => srcPath, :to => destPath)
+      result = @@server.put(:from => srcPath, :to => destPath)
+			result[0] == true ? $log.info(result[1]) : $log.error(result[1])
     end
     
     def Samba.dump(destfs)
