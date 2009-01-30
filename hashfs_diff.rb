@@ -8,6 +8,8 @@ class Hashfs
       @pos = 0
       @done = 0
       @bits = 0
+			@log = Array.new
+			@error = Array.new
       @maps = Array.new
       @complete = false
     end
@@ -34,6 +36,14 @@ class Hashfs
     def done_bits(bits)
       @done += bits
     end
+		
+		def error=(message)
+			@error << message
+		end
+
+		def log=(message)
+			@log << message
+		end
 
     def progress
       if @bits == 0
