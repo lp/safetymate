@@ -27,9 +27,11 @@ class Hashfs
       end
     end
     
-    def Samba.backup(srcDir,destRel)
-      @@server.mkdir(:path => destRel) unless @@server.exist?(:mask => destRel)
-      @@server.put(:from => srcDir, :to => destRel)
+    def Samba.backup(srcPath,destRel)
+			destPath = File.catname(destRel,@@samba_basedir)
+			destDir = File.dirname(destPath)
+      @@server.mkdir(:path => destDir)
+      @@server.put(:from => srcPath, :to => destPath)
     end
     
     def Samba.dump(destfs)
