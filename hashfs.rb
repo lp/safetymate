@@ -84,11 +84,12 @@ class Hashfs
   def Hashfs.step
     if @@diff.map?
       map = @@diff.current_map
-      map[:paths].each do |srcDir,destRel|
+      map[:paths].each do |srcPath,destRel|
         if @@loader.type == 'local'
-          Local.backup(srcDir,@@loader.destination,destRel)
+          arraylog = Local.backup(srcPath,@@loader.destination,destRel)
+					arraylog[0] == true ? @@diff.log = arraylog[1] : @@diff.error = arraylog[1]
         else
-          Samba.backup(srcDir,destRel)
+          @@diff.log = Samba.backup(srcPath,destRel)
         end
       end
       @@diff.done_bits(map[:bit]); @@diff.pos_incr
