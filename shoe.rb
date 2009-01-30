@@ -13,6 +13,7 @@ Shoes.setup do
   gem 'sambala'
 end
 class Shoe < Shoes
+	require 'logger'
   require 'loader'
   require 'shoe_load'
   require 'shoe_options'
@@ -22,6 +23,8 @@ class Shoe < Shoes
   require 'shoe_execution'
   include ShoeHelpers
   
+	$log = Logger.new('safetymate.log', 'weekly'); $log.level = Logger::DEBUG
+
   url '/', :load
   url '/options', :options
   url '/netoptions', :netpath
@@ -65,4 +68,4 @@ class Shoe < Shoes
   
 end
 
-Shoes.app :title => 'Session Safety', :width => 500, :height => 600
+Shoes.app :title => 'Session Safety', :width => 500, :height => 800
