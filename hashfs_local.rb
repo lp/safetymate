@@ -34,7 +34,8 @@ class Hashfs
       destDir = HashfsUtils.abs_root(destRoot, destRel)
       dir = File.dirname(destDir)
       File.makedirs( dir ) unless File.exist?( dir )
-      File.copy(srcDir,destDir)
+      result = File.copy(srcDir,destDir)
+			$log.info(result)
     end
     
     def Local.dump(destfs,root)
