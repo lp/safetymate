@@ -67,7 +67,7 @@ class Hashfs
     @@diff = Diff.new(srcfs.root)
     srcfs.fs.each do |k,v|
       unless destfs.fs.include?(k)
-        @@diff.map(v[:oriPath],v[:bit])
+        @@diff.map(k,v)
       end
     end
   end
@@ -84,14 +84,12 @@ class Hashfs
   def Hashfs.step
     if @@diff.map?
       map = @@diff.current_map
-      map[:paths].each do |srcPath,destRel|
-        if @@loader.type == 'local'
-          Local.backup(srcPath,@@loader.destination,destRel)
-        else
-          Samba.backup(srcPath,destRel)
-        end
+      if @@loader.type == 'local'
+        Local.backup(map[1][:oriPath],@@loader.destination,map[1][:relPath])
+      else
+        Samba.backup(map[1][:oriPath],map[1][:relPath])
       end
-      @@diff.done_bits(map[:bit]); @@diff.pos_incr
+      @@diff.done_bits(map[1][:bit]); @@diff.pos_incr
     else
       @@diff.completed
     end
