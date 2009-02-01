@@ -27,11 +27,11 @@ class Hashfs
       end
     end
     
-    def Samba.backup(srcPath,destRel)
-			destPath = File.catname(destRel,@@samba_basedir)
+    def Samba.backup(oriPath,relPath)
+			destPath = @@samba_basedir + '/' + relPath
 			destDir = File.dirname(destPath)
       @@server.mkdir(:path => destDir)
-      result = @@server.put(:from => srcPath, :to => destPath)
+      result = @@server.put(:from => oriPath, :to => destPath)
 			result[0] == true ? $log.info(result[1]) : $log.error(result[1])
     end
     
