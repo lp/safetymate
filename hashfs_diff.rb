@@ -14,11 +14,9 @@ class Hashfs
       @complete = false
     end
 
-    def map(oriPath,bit)
-      paths = { oriPath => HashfsUtils.rel_root(@srcRoot,oriPath) }
-      map = { :paths => paths, :bit => bit}
-      @maps << map
-      @bits += bit
+    def map(k,v)
+      @maps << [k,v]
+      @bits += v[:bit]
     end
     
     def map?
@@ -57,9 +55,7 @@ class Hashfs
       current = ''
       if @maps[@pos]
         map = @maps[@pos]
-        map[:paths].each do |k,v|
-          current = File.basename(k)
-        end
+				current = File.basename(map[1][:oriPath])
       else
         current = 'Done!'
       end
