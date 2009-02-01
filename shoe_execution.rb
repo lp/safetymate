@@ -30,7 +30,7 @@ module ShoeHelpers
   def walk
     anim = animate do |i|
       @progress.fraction = Hashfs.progress
-      @display.replace "backuping file: #{Hashfs.current_file} progress= #{Hashfs.progress}"
+      @display.replace "backuping file: #{Hashfs.current_file}"
       Hashfs.step
       anim.stop if Hashfs.completed?
     end
