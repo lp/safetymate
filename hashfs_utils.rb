@@ -5,7 +5,7 @@ module HashfsUtils
   end
   
   def HashfsUtils.rel_root(root, path)
-    path.gsub(/#{root}(.*)/, "\\1")
+    path.sub(/#{root}\/(.+)/, '\1')
   end
   
   def HashfsUtils.abs_root(root, path)
