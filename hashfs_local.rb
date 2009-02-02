@@ -4,16 +4,20 @@ class Hashfs
     def Local.scan_fs(root)
       fs = Hash.new
       Find.find(root) do |path|
-        unless File.directory?(path)
-          unless File.zero?(path)
-            digest = HashfsUtils.file_digest(path)
-            relPath = HashfsUtils.rel_root(root, path)
-            fs[ HashfsUtils.uKey( relPath, digest ) ] = { :oriPath => path, 
-                                                            :relPath => relPath, 
-                                                            :bit => File.size(path)
-                                                          }
-          end
-        end
+				unless path =~ /^\./ || File.basename(path) =~ /^\./
+        	unless File.directory?(path)
+	          unless File.zero?(path)
+	            digest = HashfsUtils.file_digest(path)
+	            relPath = HashfsUtils.rel_root(root, path)
+	            fs[ HashfsUtils.uKey( relPath, digest ) ] = { :oriPath => path, 
+	                                                            :relPath => relPath, 
+	                                                            :bit => File.size(path)
+	                                                          }
+	          end
+	        end
+				else
+					Find.prune
+				end
       end
       return Cleanfs.cleanSpecial(root,fs)
     end
