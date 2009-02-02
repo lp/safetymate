@@ -110,5 +110,9 @@ class Hashfs
   def Hashfs.printDebug(text)
     @@debug.puts text
   end
+
+	def Hashfs.quit
+		Samba.close
+	end
   
 end
