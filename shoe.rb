@@ -68,4 +68,4 @@ class Shoe < Shoes
   
 end
 
-Shoes.app :title => 'Session Safety', :width => 500, :height => 800
+Shoes.app :title => 'Backup Folder', :width => 500, :height => 800
