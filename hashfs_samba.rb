@@ -39,6 +39,10 @@ class Hashfs
       File.new(@@tmp_destfs, 'w').puts( Marshal.dump(destfs) )
       @@server.put(:from => @@tmp_destfs, :to => @@samba_datafile)
     end
+
+		def Samba.close
+			@@server.close
+		end
     
   end
 end
