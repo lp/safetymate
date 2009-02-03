@@ -21,6 +21,7 @@ class Shoe < Shoes
   require 'shoe_netlogin'
   require 'shoe_confirm'
   require 'shoe_execution'
+	require 'shoe_quit'
   include ShoeHelpers
   
 	$log = Logger.new('safetymate.log', 'weekly'); $log.level = Logger::DEBUG
@@ -31,28 +32,32 @@ class Shoe < Shoes
   url '/netlogin', :netlogin
   url '/confirm', :confirm
   url '/execution', :execution
+	url '/quit', :quit
   
   private
   
   def layout
     background black
-    stack do
-      @title = title( '', 
-        :align => "center",
-        :font => "Trebuchet MS",
-        :stroke => pink
-      )
-    end
-    stack(:margin => 20) do
-      stack(:height => 100) do
-        @display = para( '',
-          :size => 14, 
-          :align => "center", 
-          :font => "Trebuchet MS", 
-          :stroke => pink
-        )
-      end
+		stack(:height => 150) do
+    	stack(:margin => 10) do
+	      @title = title( '', 
+	        :align => "center",
+	        :font => "Trebuchet MS",
+	        :stroke => pink
+	      )
+	    end
+	    stack(:margin => 20) do
+	        @display = para( '',
+	          :size => 14, 
+	          :align => "center", 
+	          :font => "Trebuchet MS", 
+	          :stroke => pink
+	        )
+			end
+		end
+		stack(:margin => 20) do
       yield if block_given?
+			@quit = button('quit', :margin => 10) { clear; quit}
     end
   end
   
@@ -68,4 +73,4 @@ class Shoe < Shoes
   
 end
 
-Shoes.app :title => 'Backup Folder', :width => 500, :height => 800
+Shoes.app :title => 'Backup Folder', :width => 500, :height => 700
