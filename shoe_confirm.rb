@@ -8,8 +8,8 @@ module ShoeHelpers
       colorContent("#{@loader.destination}", white) if @loader.type == 'local'
       colorContent("//#{@loader.host}/#{@loader.share}", white) if @loader.type == 'network'
       flow do
-        button("backup!", :margin => 15) { clear; execution}
-        button("Change options", :margin => 15) { clear; options}
+        button("backup!", :margin => 10) { clear; execution}
+        button("Change options", :margin => 10) { clear; options}
       end
     end
     @title.replace 'Settings'
