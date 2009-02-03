@@ -111,7 +111,7 @@ class Hashfs
     @@debug.puts text
   end
 
-	def Hashfs.quit
+	def Hashfs.close
 		Samba.close
 	end
   
