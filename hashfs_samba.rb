@@ -2,7 +2,8 @@ class Hashfs
   module Samba
     require 'rubygems'
     require 'sambala'
-    
+    @@server = nil
+
     def Samba.load(loader)
       @@loader = loader
       @@samba_basedir = File.basename(@@loader.source)
@@ -41,7 +42,7 @@ class Hashfs
     end
 
 		def Samba.close
-			@@server.close unless @@server.nil?
+			result = @@server.close unless @@server.nil?
 		end
     
   end
