@@ -31,7 +31,7 @@ module ShoeHelpers
 					colorContent('Domain', red)
 					colorContent("#{@loader.domain.upcase}", white)
 				end
-        @setNetDir = button('Set Network Path', :margin => 15) { clear; netpath }
+        @setNetDir = button('Set Network Path', :margin => 10) { clear; netpath }
         flow do
           colorContent("user: ", red)
           colorContent("#{@loader.user}", white)
@@ -40,17 +40,17 @@ module ShoeHelpers
           colorContent("pass: ", red)
           colorContent("#{@loader.password}", white)
         end
-        @setAccess = button('Set User and Password', :margin => 15) { clear; netlogin }
+        @setAccess = button('Set User and Password', :margin => 10) { clear; netlogin }
       end
       
       @localDest = stack do
         colorContent("Local backup destination path: ", red)
         @destination = colorContent("#{@loader.destination}", white)
-        button('set destination folder', :margin => 15) {@loader.destination = ask_open_folder; @destination.replace "\t#{@loader.destination}" }
+        button('set destination folder', :margin => 10) {@loader.destination = ask_open_folder; @destination.replace "\t#{@loader.destination}" }
       end
       
       toggleDest
-      button('OK', :align => 'right', :margin => 15) { @loader.write; clear; confirm}
+      button('OK', :align => 'right', :margin => 10) { @loader.write; clear; confirm}
     end
     @title.replace 'Options'
     @display.replace 'Please set properly:'
