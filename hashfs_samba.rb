@@ -18,8 +18,8 @@ class Hashfs
     end
     
     def Samba.getDestFs
-      unless @@server.exist?(:mask => @@samba_basedir)
-        @@server.mkdir(:path => @@samba_basedir)
+      unless @@server.exist?(@@samba_basedir)
+        @@server.mkdir(@@samba_basedir)
         return Hashfs.new(@@loader)
       else
         @@server.get(:from => @@samba_datafile, :to => @@tmp_destfs)
@@ -30,7 +30,7 @@ class Hashfs
     def Samba.backup(oriPath,relPath)
 			destPath = @@samba_basedir + '/' + relPath
 			destDir = File.dirname(destPath)
-      @@server.mkdir(:path => destDir)
+      @@server.mkdir(destDir)
       result = @@server.put(:from => oriPath, :to => destPath)
 			result[0] == true ? $log.info(result[1]) : $log.error(result[1])
     end
@@ -41,7 +41,7 @@ class Hashfs
     end
 
 		def Samba.close
-			@@server.close
+			@@server.close unless @@server.nil?
 		end
     
   end
