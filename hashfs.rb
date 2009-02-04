@@ -91,12 +91,16 @@ class Hashfs
       end
       @@diff.done_bits(map[1][:bit]); @@diff.pos_incr
     else
-      @@diff.completed
+			if @@loader.type == 'local'
+      	@@diff.completed
+			else
+				@@diff.completed if Samba.queue_done?
+			end
     end
   end
   
   def Hashfs.progress
-    @@diff.progress
+		@@loader.type == 'local' ? @@diff.progress : Samba.progress.to_f
   end
   
   def Hashfs.current_file
