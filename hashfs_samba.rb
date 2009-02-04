@@ -14,7 +14,7 @@ class Hashfs
                             :domain => @@loader.domain,
                             :user => @@loader.user,
                             :password => @@loader.password,
-                            :threads => 1)
+                            :threads => 2)
       Samba.getDestFs
     end
     
@@ -32,9 +32,16 @@ class Hashfs
 			destPath = @@samba_basedir + '/' + relPath
 			destDir = File.dirname(destPath)
       @@server.mkdir(destDir)
-      result = @@server.put(:from => oriPath, :to => destPath)
-			result[0] == true ? $log.info(result[1]) : $log.error(result[1])
+      @@server.put(:from => oriPath, :to => destPath, :queue => true)
     end
+
+		def Samba.queue_done?
+			@@server.progress == 1 ? true : false
+		end
+		
+		def Samba.progress
+			@@server.progress
+		end
     
     def Samba.dump(destfs)
       File.new(@@tmp_destfs, 'w').puts( Marshal.dump(destfs) )
