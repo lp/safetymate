@@ -23,6 +23,7 @@ module ShoeHelpers
   
   def timeFreeze
     unless @loader.extension == 'none'
+			@display.replace "saving session history"
       Hashfs.historyToSafety
     end
   end
