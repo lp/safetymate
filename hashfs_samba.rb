@@ -2,7 +2,10 @@ class Hashfs
   module Samba
     require 'rubygems'
     require 'sambala'
+
     @@server = nil
+		@@queue = Array.new
+		@@done_results = {true => Array.new, false => Array.new}
 
     def Samba.load(loader)
       @@loader = loader
@@ -29,19 +32,11 @@ class Hashfs
     end
     
     def Samba.backup(oriPath,relPath)
-			destPath = @@samba_basedir + '/' + relPath
+			destPath = File.join(@@samba_basedir, relPath)
 			destDir = File.dirname(destPath)
       @@server.mkdir(destDir)
-      @@server.put(:from => oriPath, :to => destPath, :queue => true)
+      @@server.put(:from => oriPath, :to => destPath, :queue => false)
     end
-
-		def Samba.queue_done?
-			@@server.progress == 1 ? true : false
-		end
-		
-		def Samba.progress
-			@@server.progress
-		end
     
     def Samba.dump(destfs)
       File.new(@@tmp_destfs, 'w').puts( Marshal.dump(destfs) )

@@ -9,6 +9,7 @@
 # 
 # :title:Safety v1.0
 Shoes.setup do
+	gem 'globalog'
   gem 'abundance'
   gem 'sambala'
 end

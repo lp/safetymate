@@ -5,7 +5,8 @@ module ShoeHelpers
     @title.replace 'Quitting...'
     @display.replace 'Have a nice day!'
 		@quit.remove
-		timer(2) { Hashfs.close; exit }
+		Hashfs.close
+		timer(2) { exit }
 	end
 	
 end

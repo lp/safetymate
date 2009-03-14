@@ -1,7 +1,7 @@
 class Hashfs
   class Diff
 
-    attr_reader :complete, :srcRoot, :pos
+    attr_reader :complete, :srcRoot, :pos, :maps
 
     def initialize(srcRoot)
       @srcRoot = srcRoot

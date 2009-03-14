@@ -40,6 +40,7 @@ module ShoeHelpers
   def saveData
     @destfs.merge(@srcfs)
     Hashfs.dump(@destfs)
+		# Hashfs.dumplog
   end
   
   def printDebug(text)

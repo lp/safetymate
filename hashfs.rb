@@ -22,6 +22,7 @@ class Hashfs
   attr_reader :progress, :bit, :fs, :root
   
   DATANAME = '.session_safety_data'
+	HASHFS_LOG = 'backup_results.log'
   
   @@debug = File.new('debug_out.txt', 'w')
   
@@ -81,30 +82,71 @@ class Hashfs
     end
   end
   
-  def Hashfs.step
-    if @@diff.map?
-      map = @@diff.current_map
-      if @@loader.type == 'local'
-        Local.backup(map[1][:oriPath],@@loader.destination,map[1][:relPath])
-      else
-        Samba.backup(map[1][:oriPath],map[1][:relPath])
-      end
-      @@diff.done_bits(map[1][:bit]); @@diff.pos_incr
-    else
+  # def Hashfs.step
+  #   if @@diff.map?
+  #     map = @@diff.current_map
+  #     if @@loader.type == 'local'
+  #       Local.backup(map[1][:oriPath],@@loader.destination,map[1][:relPath])
+  #     else
+  #       Samba.backup(map[1][:oriPath],map[1][:relPath])
+  #     end
+  #     @@diff.done_bits(map[1][:bit]); @@diff.pos_incr
+  #   else
+  # 			if @@loader.type == 'local'
+  #     	@@diff.completed
+  # 			else
+  # 				@@diff.completed if Samba.queue_done?
+  # 			end
+  #   end
+  # end
+
+	# def Hashfs.step
+	# 		debug("step")
+	# 		if @@loader.type == 'local'
+	# 			if @@diff.map?
+	# 				map = @@diff.current_map
+	# 				Local.backup(map[1][:oriPath],@@loader.destination,map[1][:relPath])
+	# 				@@diff.done_bits(map[1][:bit]); @@diff.pos_incr
+	# 			else
+	# 				@@diff.completed
+	# 			end
+	# 		else
+	# 			case Samba.queued?
+	# 			when true
+	# 				debug("samba true")
+	# 				Samba.get_done
+	# 				# @@diff.done_bits(Samba.done_bits)
+	# 			when false
+	# 				debug("samba false")
+	# 				@@diff.completed
+	# 			when nil
+	# 				debug("samba nil, diff: #{@@diff.inspect}")
+	# 				Samba.queue(@@diff.maps)
+	# 			end
+	# 		end
+	# 	end
+	
+	def Hashfs.step
+		debug("step")
+		if @@diff.map?
+			map = @@diff.current_map
 			if @@loader.type == 'local'
-      	@@diff.completed
+				Local.backup(map[1][:oriPath],@@loader.destination,map[1][:relPath])
 			else
-				@@diff.completed if Samba.queue_done?
+				Samba.backup(map[1][:oriPath],map[1][:relPath])
 			end
-    end
-  end
+			@@diff.done_bits(map[1][:bit]); @@diff.pos_incr
+		else
+			@@diff.completed
+		end
+	end
   
   def Hashfs.progress
-		@@loader.type == 'local' ? @@diff.progress : Samba.progress.to_f
+		@@diff.progress
   end
   
   def Hashfs.current_file
-    @@diff.current_file
+		@@diff.current_file
   end
   
   def Hashfs.completed?
@@ -114,6 +156,20 @@ class Hashfs
   def Hashfs.printDebug(text)
     @@debug.puts text
   end
+
+	def Hashfs.dumplog
+		File.open(HASHFS_LOG,'w') do |file|
+			file.puts Time.now
+			if @@loader.type == 'local'
+				
+			else
+				file.puts "The Success:\n\n"
+				Samba.success.each { |s| file.puts s }
+				file.puts "\n\nThe Failed:\n\n"
+				Samba.failed.each { |f| file.puts f }
+			end
+		end
+	end
 
 	def Hashfs.close
 		Samba.close
