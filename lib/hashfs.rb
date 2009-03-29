@@ -12,12 +12,12 @@ class Hashfs
   require "digest"
   require 'ftools'
   
-  require 'hashfs_cleanfs'
-  require 'hashfs_diff'
-  require 'hashfs_history'
-  require 'hashfs_local'
-  require 'hashfs_samba'
-  require 'hashfs_utils'
+	require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs', 'hashfs_cleanfs')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs', 'hashfs_diff')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs', 'hashfs_history')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs', 'hashfs_local')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs', 'hashfs_samba')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs', 'hashfs_utils')
   
   attr_reader :progress, :bit, :fs, :root
   
