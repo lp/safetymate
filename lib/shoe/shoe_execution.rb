@@ -1,5 +1,4 @@
-module ShoeHelpers
-	File.join( File.dirname( File.expand_path(__FILE__)), '..', 'hashfs') 
+module ShoeHelpers 
   require 'ftools'
   
   def execution

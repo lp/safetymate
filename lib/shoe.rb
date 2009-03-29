@@ -24,6 +24,7 @@ class Shoe < Shoes
   require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_execution')
 	require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_quit')
   include ShoeHelpers
+	require File.join( File.dirname( File.expand_path(__FILE__)), 'hashfs')
   
 	$log = Logger.new('safetymate.log', 'weekly'); $log.level = Logger::DEBUG
 
