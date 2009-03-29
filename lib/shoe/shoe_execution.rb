@@ -1,5 +1,5 @@
 module ShoeHelpers
-  require 'hashfs'
+	File.join( File.dirname( File.expand_path(__FILE__)), '..', 'hashfs') 
   require 'ftools'
   
   def execution
