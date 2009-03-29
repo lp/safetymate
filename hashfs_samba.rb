@@ -16,8 +16,7 @@ class Hashfs
                             :share => @@loader.share,
                             :domain => @@loader.domain,
                             :user => @@loader.user,
-                            :password => @@loader.password,
-                            :threads => 2)
+                            :password => @@loader.password)
       Samba.getDestFs
     end
     
