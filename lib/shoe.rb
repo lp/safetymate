@@ -15,14 +15,14 @@ Shoes.setup do
 end
 class Shoe < Shoes
 	require 'logger'
-  require 'loader'
-  require 'shoe_load'
-  require 'shoe_options'
-  require 'shoe_netpath'
-  require 'shoe_netlogin'
-  require 'shoe_confirm'
-  require 'shoe_execution'
-	require 'shoe_quit'
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'loader')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_load')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_options')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_netpath')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_netlogin')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_confirm')
+  require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_execution')
+	require File.join( File.dirname( File.expand_path(__FILE__)), 'shoe', 'shoe_quit')
   include ShoeHelpers
   
 	$log = Logger.new('safetymate.log', 'weekly'); $log.level = Logger::DEBUG
