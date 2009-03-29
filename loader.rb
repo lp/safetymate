@@ -60,7 +60,7 @@ class Loader
   private
   
   def prefPath
-    File.catname(@@prefName, @source)
+    File.join(@source,@@prefName)
   end
   
   def loadPref
