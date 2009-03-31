@@ -40,6 +40,15 @@ class Hashfs
     @fs.merge!( srcfs.fs )
     @fs = Cleanfs.killdupl(@@loader.source,@fs,srcfs.fs)
   end
+
+	def historyToSafety
+    history = History.new(@@loader.extension,@@loader.source,@fs)
+    history.go
+    history.exts.each do |k,v|
+      newPath = File.catname(File.basename(k),history.historyPath)
+      @@diff.map(newPath,v)
+    end
+  end
   
   # Class Methods
   
@@ -70,15 +79,6 @@ class Hashfs
       unless destfs.fs.include?(k)
         @@diff.map(k,v)
       end
-    end
-  end
-  
-  def Hashfs.historyToSafety
-    history = History.new(@@loader.extension,@srcfs.root,@srcfs.fs)
-    history.go
-    history.exts.each do |k,v|
-      newPath = File.catname(File.basename(k),history.historyPath)
-      @@diff.map(newPath,v)
     end
   end
   
