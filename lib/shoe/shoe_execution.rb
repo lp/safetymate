@@ -15,15 +15,16 @@ module ShoeHelpers
   def lace
     @srcfs = Hashfs.new(@loader)
     @srcfs.scan
-    @display.replace "looking for files to backup"
+    @display.replace "retrieving destination status"
     @destfs = Hashfs.load
+		@display.replace "looking for files to backup"
     Hashfs.diff(@srcfs, @destfs)
   end
   
   def timeFreeze
     unless @loader.extension == 'none'
 			@display.replace "saving session history"
-      Hashfs.historyToSafety
+      @srcfs.historyToSafety
     end
   end
   
